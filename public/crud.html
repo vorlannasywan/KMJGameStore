@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD - Admin Panel</title>
+    <style>
+        .game-list-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+        }
+        .game-actions {
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            padding: 5px 10px;
+            cursor: pointer;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 3px;
+        }
+        button.delete {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <h2>Admin - CRUD for Games</h2>
+
+    <h3>Create New Game</h3>
+    <form id="gameForm" enctype="multipart/form-data">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required>
+        <br><br>
+
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" step="0.01" required>
+        <br><br>
+
+        <label for="releaseYear">Release Year:</label>
+        <input type="number" id="releaseYear" name="releaseYear" required>
+        <br><br>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" rows="4" cols="50" required></textarea>
+        <br><br>
+
+        <label for="genre">Genre:</label>
+        <input type="text" id="genre" name="genre" required>
+        <br><br>
+
+        <label for="developer">Developer:</label>
+        <input type="text" id="developer" name="developer" required>
+        <br><br>
+
+        <label for="publisher">Publisher:</label>
+        <input type="text" id="publisher" name="publisher" required>
+        <br><br>
+
+        <label for="image">Game Image:</label>
+        <input type="file" id="image" name="image" accept="image/*" required>
+        <br><br>
+
+        <button type="submit">Create Game</button>
+    </form>
+
+    <h3>All Games</h3>
+    <div id="gamesList">
+        <!-- Games will be displayed here -->
+    </div>
+
+    <script>
+        // Handle form submission to create new game
+        document.getElementById('gameForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(document.getElementById('gameForm'));
+
+            // Sending form data (including image) to API to create a new game
+            const response = await fetch('/api/games', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: formData
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert('Game created successfully!');
+                fetchAllGames();  // Reload the games list
+            } else {
+                alert('Error: ' + data.message);
+            }
+        });
+
+        // Fetch and display all games
+        async function fetchAllGames() {
+            const response = await fetch('/api/games');
+            const data = await response.json();
+            const gamesList = document.getElementById('gamesList');
+            gamesList.innerHTML = '';  // Clear existing list
+
+            data.forEach(game => {
+                const gameItem = document.createElement('div');
+                gameItem.classList.add('game-list-item');
+                gameItem.innerHTML = `
+                    <div>
+                        <h4>${game.title}</h4>
+                        <p>Price: $${game.price}</p>
+                        <p>Release Year: ${game.releaseYear}</p>
+                        <p>Genre: ${game.genre}</p>
+                        <p>Developer: ${game.developer}</p>
+                        <p>Publisher: ${game.publisher}</p>
+                        <p>Description: ${game.description}</p>
+                        <img src="${game.image}" alt="${game.title}" style="width: 100px; height: 100px;">
+                    </div>
+                    <div class="game-actions">
+                        <button class="edit" onclick="window.location.href='/edit.html?id=${game.id}'">Edit</button>
+                        <button class="delete" onclick="deleteGame(${game.id})">Delete</button>
+                    </div>
+                `;
+                gamesList.appendChild(gameItem);
+            });
+        }
+
+        // Delete a game by ID
+        async function deleteGame(gameId) {
+            const response = await fetch(`/api/games/${gameId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert('Game deleted successfully!');
+                fetchAllGames(); // Reload the games list
+            } else {
+                alert('Error: ' + data.message);
+            }
+        }
+
+        // Load all games on page load
+        fetchAllGames();
+    </script>
+</body>
+</html>

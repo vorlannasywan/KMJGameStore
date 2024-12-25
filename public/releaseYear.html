@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games by Release Year</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        #game-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        #game-list li {
+            background-color: #f4f4f4;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+        #game-list img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+        #game-list a {
+            text-decoration: none;
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+    <h1>Games Released in Year: <span id="year-name">Loading...</span></h1>
+    
+    <h3>Available Games</h3>
+    <ul id="game-list">
+        <!-- Filtered game list will be populated here -->
+    </ul>
+
+    <script>
+        // Get the selected year from the URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const selectedYear = urlParams.get('year');
+
+        // Display the selected year
+        document.getElementById('year-name').innerText = selectedYear;
+
+        // Fetch game data and filter by year
+        fetch('/api/games')
+        .then(response => response.json())
+        .then(games => {
+            const gameList = document.getElementById('game-list');
+            const filteredGames = games.filter(game => game.releaseYear === parseInt(selectedYear));
+
+            if (filteredGames.length === 0) {
+                gameList.innerHTML = '<li>No games available for the selected year</li>';
+            } else {
+                filteredGames.forEach(game => {
+                    const listItem = document.createElement('li');
+                    const gameImage = document.createElement('img');
+                    gameImage.src = game.image;
+                    gameImage.alt = game.title;
+
+                    const gameInfo = document.createElement('div');
+                    const gameLink = document.createElement('a');
+                    gameLink.href = `/gameDetail.html?id=${game.id}`;
+                    gameLink.innerHTML = `<strong>${game.title}</strong> - $${game.price}`;
+
+                    gameInfo.appendChild(gameLink);
+                    listItem.appendChild(gameImage);
+                    listItem.appendChild(gameInfo);
+                    gameList.appendChild(listItem);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching games:', error);
+            const gameList = document.getElementById('game-list');
+            gameList.innerHTML = '<li>Failed to load games</li>';
+        });
+    </script>
+</body>
+</html>

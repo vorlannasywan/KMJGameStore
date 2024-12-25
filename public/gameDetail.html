@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Detail</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        #game-info {
+            margin-bottom: 20px;
+        }
+        .game-detail {
+            display: flex;
+            align-items: center;
+        }
+        .game-detail img {
+            width: 150px;
+            height: 150px;
+            margin-right: 20px;
+        }
+        .game-detail-info {
+            max-width: 600px;
+        }
+        .payment-methods {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Game Detail</h1>
+    
+    <div id="game-info" class="game-detail">
+        <img id="game-image" src="" alt="Game Image">
+        <div class="game-detail-info">
+            <h3 id="game-title">Loading...</h3>
+            <p id="game-price"></p>
+            <p id="game-releaseYear"></p>
+            <p id="game-genre"></p>
+            <p id="game-developer"></p>
+            <p id="game-publisher"></p>
+            <p id="game-description"></p>
+            <button id="buy-button">Buy Now</button>
+        </div>
+    </div>
+
+    <div id="payment-methods" class="payment-methods" style="display: none;">
+        <h3>Select Payment Method</h3>
+        <form id="payment-form">
+            <label for="payment-method">Payment Method:</label>
+            <select id="payment-method">
+                <option value="credit-card">Credit Card</option>
+                <option value="paypal">PayPal</option>
+                <option value="bank-transfer">Bank Transfer</option>
+            </select>
+            <br><br>
+            <button type="submit">Confirm Purchase</button>
+        </form>
+    </div>
+
+    <script>
+        // Get game ID from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const gameId = urlParams.get('id');
+
+        // Fetch game details from the API
+        fetch(`/api/games/${gameId}`)
+            .then(response => response.json())
+            .then(game => {
+                document.getElementById('game-title').innerText = game.title;
+                document.getElementById('game-price').innerText = `Price: $${game.price}`;
+                document.getElementById('game-releaseYear').innerText = `Release Year: ${game.releaseYear}`;
+                document.getElementById('game-genre').innerText = `Genre: ${game.genre}`;
+                document.getElementById('game-developer').innerText = `Developer: ${game.developer}`;
+                document.getElementById('game-publisher').innerText = `Publisher: ${game.publisher}`;
+                document.getElementById('game-description').innerText = `Description: ${game.description}`;
+                document.getElementById('game-image').src = game.image;
+            })
+            .catch(error => console.error('Error fetching game details:', error));
+
+        // Handle buy button click
+        document.getElementById('buy-button').addEventListener('click', () => {
+            // Check if user is logged in
+            const userId = sessionStorage.getItem('userId');
+
+            if (!userId) {
+                alert('Please log in to proceed with the purchase.');
+                window.location.href = '/loginuser.html';  // Redirect to login page if not logged in
+            } else {
+                document.getElementById('payment-methods').style.display = 'block';  // Show payment options
+            }
+        });
+
+        // Handle payment form submission
+        document.getElementById('payment-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const paymentMethod = document.getElementById('payment-method').value;
+    const userId = sessionStorage.getItem('userId');
+    const gameId = new URLSearchParams(window.location.search).get('id');
+
+    if (!userId) {
+        alert('Please log in to proceed with the purchase.');
+        window.location.href = '/loginuser.html';  // Redirect to login page
+        return;
+    }
+
+    // Send the transaction data to the backend
+    fetch('/api/transactions/purchase', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, gameId, paymentMethod })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert('Purchase successful!');
+        window.location.href = '/userGame.html';  // Redirect to dashboard after success
+    })
+    .catch(error => {
+        console.error('Error processing transaction:', error);
+        alert('Failed to process the transaction. Please try again.');
+    });
+});
+
+    </script>
+</body>
+</html>

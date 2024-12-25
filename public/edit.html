@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Game</title>
+    <style>
+        form {
+            margin: 20px;
+            max-width: 600px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background-color: #007bff;
+            color: white;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Edit Game</h2>
+    <form id="editGameForm">
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required>
+        <br><br>
+
+        <label for="price">Price:</label>
+        <input type="number" id="price" name="price" step="0.01" required>
+        <br><br>
+
+        <label for="releaseYear">Release Year:</label>
+        <input type="number" id="releaseYear" name="releaseYear" required>
+        <br><br>
+
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" rows="4" cols="50" required></textarea>
+        <br><br>
+
+        <label for="genre">Genre:</label>
+        <input type="text" id="genre" name="genre" required>
+        <br><br>
+
+        <label for="developer">Developer:</label>
+        <input type="text" id="developer" name="developer" required>
+        <br><br>
+
+        <label for="publisher">Publisher:</label>
+        <input type="text" id="publisher" name="publisher" required>
+        <br><br>
+
+        <button type="submit">Update Game</button>
+    </form>
+
+    <script>
+        // Fetch game details by ID and populate the form
+        async function fetchGameDetails() {
+            const params = new URLSearchParams(window.location.search);
+            const gameId = params.get('id');
+            const response = await fetch(`/api/games/${gameId}`);
+            const game = await response.json();
+
+            if (game) {
+                document.getElementById('title').value = game.title;
+                document.getElementById('price').value = game.price;
+                document.getElementById('releaseYear').value = game.releaseYear;
+                document.getElementById('description').value = game.description;
+                document.getElementById('genre').value = game.genre;
+                document.getElementById('developer').value = game.developer;
+                document.getElementById('publisher').value = game.publisher;
+            } else {
+                alert('Game not found');
+            }
+        }
+
+        // Handle form submission to update the game
+        document.getElementById('editGameForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const params = new URLSearchParams(window.location.search);
+            const gameId = params.get('id');
+
+            const updatedGame = {
+                title: document.getElementById('title').value,
+                price: parseFloat(document.getElementById('price').value),
+                releaseYear: parseInt(document.getElementById('releaseYear').value),
+                description: document.getElementById('description').value,
+                genre: document.getElementById('genre').value,
+                developer: document.getElementById('developer').value,
+                publisher: document.getElementById('publisher').value
+            };
+
+            const response = await fetch(`/api/games/${gameId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify(updatedGame)
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                alert('Game updated successfully!');
+                window.location.href = '/crud.html'; // Redirect back to the CRUD page
+            } else {
+                alert('Error: ' + data.message);
+            }
+        });
+
+        // Fetch game details on page load
+        fetchGameDetails();
+    </script>
+</body>
+</html>

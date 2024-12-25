@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        h1 {
+            color: #4CAF50;
+        }
+        #user-info {
+            margin-bottom: 20px;
+        }
+        #filters {
+            margin-bottom: 20px;
+        }
+        #game-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        #game-list li {
+            background-color: #f4f4f4;
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+        #game-list img {
+            width: 50px;
+            height: 50px;
+            margin-right: 10px;
+            border-radius: 5px;
+        }
+        #game-list a {
+            text-decoration: none;
+            color: #000;
+        }
+        #library-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #library-button:hover {
+            background-color: #45a049;
+        }
+        #logout-button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        #logout-button:hover {
+            background-color: #e53935;
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to Your Game Dashboard</h1>
+    
+    <div id="user-info">
+        <h2 id="user-name">Loading...</h2>
+    </div>
+
+    <div id="filters">
+        <h3>Filter Games</h3>
+        <label for="genre-select">Choose Genre:</label>
+        <select id="genre-select">
+            <option value="">-- Select Genre --</option>
+        </select>
+        <button id="filter-genre">Filter by Genre</button>
+
+        <label for="year-select">Choose Release Year:</label>
+        <select id="year-select">
+            <option value="">-- Select Year --</option>
+        </select>
+        <button id="filter-year">Filter by Release Year</button>
+    </div>
+
+    <h3>Available Games</h3>
+    <ul id="game-list"></ul>
+
+    <!-- Button to go to Library -->
+    <button id="library-button" onclick="window.location.href = '/library.html';">Go to Your Library</button>
+
+    <!-- Logout Button -->
+    <button id="logout-button" onclick="logout()">Logout</button>
+
+    <script>
+        const userName = sessionStorage.getItem('userName');
+
+        if (userName) {
+            document.getElementById('user-name').innerText = `Welcome, ${userName}!`;
+        } else {
+            window.location.href = '/loginuser.html';
+        }
+
+        // Logout function
+        function logout() {
+            sessionStorage.removeItem('userName');
+            sessionStorage.removeItem('userId');
+            window.location.href = '/home.html'; // Redirect to home page
+        }
+
+        const genres = ['Action', 'Adventure', 'RPG', 'Sports', 'Strategy'];
+        const releaseYears = ['2020', '2021', '2022', '2023'];
+
+        const genreSelect = document.getElementById('genre-select');
+        const yearSelect = document.getElementById('year-select');
+
+        genres.forEach(genre => {
+            const option = document.createElement('option');
+            option.value = genre;
+            option.textContent = genre;
+            genreSelect.appendChild(option);
+        });
+
+        releaseYears.forEach(year => {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            yearSelect.appendChild(option);
+        });
+
+        document.getElementById('filter-genre').addEventListener('click', () => {
+            const selectedGenre = genreSelect.value;
+            if (selectedGenre) {
+                window.location.href = `/genre.html?genre=${encodeURIComponent(selectedGenre)}`;
+            } else {
+                alert('Please select a genre.');
+            }
+        });
+
+        document.getElementById('filter-year').addEventListener('click', () => {
+            const selectedYear = yearSelect.value;
+            if (selectedYear) {
+                window.location.href = `/releaseYear.html?year=${encodeURIComponent(selectedYear)}`;
+            } else {
+                alert('Please select a release year.');
+            }
+        });
+
+        fetch('/api/games')
+        .then(response => response.json())
+        .then(games => {
+            const gameList = document.getElementById('game-list');
+            if (games.length === 0) {
+                gameList.innerHTML = '<li>No games available</li>';
+            } else {
+                games.forEach(game => {
+                    const listItem = document.createElement('li');
+                    const gameImage = document.createElement('img');
+                    gameImage.src = game.image;
+                    gameImage.alt = game.title;
+
+                    const gameInfo = document.createElement('div');
+                    const gameLink = document.createElement('a');
+                    gameLink.href = `/gameDetail.html?id=${game.id}`;
+                    gameLink.innerHTML = `<strong>${game.title}</strong> - $${game.price}`;
+
+                    gameInfo.appendChild(gameLink);
+                    listItem.appendChild(gameImage);
+                    listItem.appendChild(gameInfo);
+                    gameList.appendChild(listItem);
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching games:', error);
+            const gameList = document.getElementById('game-list');
+            gameList.innerHTML = '<li>Failed to load games</li>';
+        });
+    </script>
+</body>
+</html>
