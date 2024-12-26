@@ -26,10 +26,21 @@
         button.delete {
             background-color: red;
         }
+        .logout-button {
+            margin: 20px 0;
+            padding: 10px 20px;
+            background-color: #ff5722;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
     <h2>Admin - CRUD for Games</h2>
+
+    <button class="logout-button" id="logoutButton">Logout</button>
 
     <h3>Create New Game</h3>
     <form id="gameForm" enctype="multipart/form-data">
@@ -110,7 +121,7 @@
                 gameItem.innerHTML = `
                     <div>
                         <h4>${game.title}</h4>
-                        <p>Price: $${game.price}</p>
+                        <p>Price: Rp${game.price}</p>
                         <p>Release Year: ${game.releaseYear}</p>
                         <p>Genre: ${game.genre}</p>
                         <p>Developer: ${game.developer}</p>
@@ -144,6 +155,14 @@
                 alert('Error: ' + data.message);
             }
         }
+
+        // Logout functionality
+        document.getElementById('logoutButton').addEventListener('click', () => {
+            sessionStorage.clear();
+            localStorage.clear();
+            alert('You have been logged out!');
+            window.location.href = '/home.html'; // Redirect to login page
+        });
 
         // Load all games on page load
         fetchAllGames();

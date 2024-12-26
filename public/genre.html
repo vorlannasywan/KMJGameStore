@@ -71,7 +71,7 @@
                     const gameInfo = document.createElement('div');
                     const gameLink = document.createElement('a');
                     gameLink.href = `/gameDetail.html?id=${game.id}`;
-                    gameLink.innerHTML = `<strong>${game.title}</strong> - $${game.price}`;
+                    gameLink.innerHTML = `<strong>${game.title}</strong> - Rp${game.price}`;
 
                     gameInfo.appendChild(gameLink);
                     listItem.appendChild(gameImage);

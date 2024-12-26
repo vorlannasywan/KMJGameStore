@@ -114,7 +114,7 @@
         }
 
         const genres = ['Action', 'Adventure', 'RPG', 'Sports', 'Strategy'];
-        const releaseYears = ['2020', '2021', '2022', '2023'];
+        const releaseYears = ['2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019','2020', '2021', '2022', '2023', '2024'];
 
         const genreSelect = document.getElementById('genre-select');
         const yearSelect = document.getElementById('year-select');
@@ -167,7 +167,7 @@
                     const gameInfo = document.createElement('div');
                     const gameLink = document.createElement('a');
                     gameLink.href = `/gameDetail.html?id=${game.id}`;
-                    gameLink.innerHTML = `<strong>${game.title}</strong> - $${game.price}`;
+                    gameLink.innerHTML = `<strong>${game.title}</strong> - Rp${game.price}`;
 
                     gameInfo.appendChild(gameLink);
                     listItem.appendChild(gameImage);

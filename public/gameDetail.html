@@ -73,7 +73,7 @@
             .then(response => response.json())
             .then(game => {
                 document.getElementById('game-title').innerText = game.title;
-                document.getElementById('game-price').innerText = `Price: $${game.price}`;
+                document.getElementById('game-price').innerText = `Price: Rp${game.price}`;
                 document.getElementById('game-releaseYear').innerText = `Release Year: ${game.releaseYear}`;
                 document.getElementById('game-genre').innerText = `Genre: ${game.genre}`;
                 document.getElementById('game-developer').innerText = `Developer: ${game.developer}`;
