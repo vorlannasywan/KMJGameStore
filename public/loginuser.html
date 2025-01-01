@@ -4,20 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Login</title>
+    <link href="/css/output.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h2>User Login</h2>
-    <form id="loginForm">
-        <label for="email">Email:</label>
-        <input type="email" id="email" required>
-        <br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" required>
-        <br>
-        <button type="submit">Login</button>
-    </form>
-
-    <p>Don't have an account? <button id="goToRegister">Register here</button></p>
+<body class="bg-[url('/images/Background.jpg')] bg-no-repeat bg-cover max-h-screen overflow-hidden font-mont">
+    <div class="flex items-center justify-left min-h-screen ml-40">
+        <div class="rounded-lg shadow-md w-full max-w-xl">        
+            <h2 class="text-white text-6xl font-semibold font-mont text-left mb-20">LOGIN / <span class="text-[#979797]">SIGN UP</span> </h2>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label for="email" class="block text-2xl font-semibold text-white mb-5">Email:</label>
+                    <input type="email" id="email" placeholder="Enter your email" required 
+                      class="block w-full px-3 py-7 mb-11 border-2 text-2xl text-white border-[#DF29F3] rounded-md shadow-sm focus:ring-[#DF29F3] focus:border-[#DF29F3] bg-transparent placeholder-[#5e5e5e] placeholder-font-mont placeholder-2xl">
+                  </div>                  
+            <div>
+                <label for="password" class="block text-2xl font-semibold text-white mb-5">Password:</label>
+                <input type="password" id="password" placeholder="Enter your password" required 
+                       class="block w-full px-3 py-7 mb-11 border-2 text-2xl text-white border-[#DF29F3] rounded-md shadow-sm focus:ring-[#DF29F3] focus:border-[#DF29F3] bg-transparent placeholder-[#5e5e5e] placeholder-font-mont placeholder-2xl">
+            </div>
+            <button type="submit" 
+                    class="w-full bg-[#DF29F3] text-white py-7 px-3 rounded-full text-2xl font-mont font-bold hover:bg-[#850093] transition">
+                Login
+            </button>
+        </form>
+        <p class="mt-10 text-center text-base text-white">
+            Don't have an account? 
+            <button id="goToRegister" 
+                    class="text-[#DF29F3] hover:underline">
+                Sign up here
+            </button>
+        </p>
+        </div>
+    </div>
 
     <script>
         document.getElementById('loginForm').addEventListener('submit', async (e) => {

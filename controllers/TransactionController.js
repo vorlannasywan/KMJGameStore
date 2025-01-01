@@ -77,3 +77,33 @@ export const getUserTransactions = async (req, res) => {
     }
 };
 
+// Fungsi untuk mengambil semua transaksi
+export const getAllTransactions = async (req, res) => {
+    try {
+        // Fetch all transactions from the database
+        const transactions = await Transaction.findAll({
+            include: [
+                {
+                    model: User,
+                    attributes: ['name', 'email'],  // Include user data
+                },
+                {
+                    model: Game,
+                    attributes: ['title', 'description', 'price', 'image'],  // Include game data
+                },
+            ],
+        });
+
+        // Jika tidak ada transaksi yang ditemukan, kirimkan pesan yang sesuai
+        if (!transactions || transactions.length === 0) {
+            return res.status(404).json({ message: 'No transactions found' });
+        }
+
+        // Kirimkan daftar transaksi jika ditemukan
+        res.status(200).json(transactions);
+    } catch (error) {
+        // Tangani error yang terjadi dan kirimkan pesan error ke klien
+        console.error('Error fetching transactions:', error);
+        res.status(500).json({ error: 'An error occurred while fetching transactions.' });
+    }
+};

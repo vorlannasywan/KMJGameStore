@@ -3,46 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/output.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Games by Genre</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
+        /* Sidebar styling */
+        aside {
+            height: 100vh; /* Full height */
+            overflow: hidden; /* Prevent scroll on sidebar */
         }
-        h1 {
-            color: #4CAF50;
-        }
-        #game-list {
-            list-style-type: none;
-            padding: 0;
-        }
-        #game-list li {
-            background-color: #f4f4f4;
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-        }
-        #game-list img {
-            width: 50px;
-            height: 50px;
-            margin-right: 10px;
-            border-radius: 5px;
-        }
-        #game-list a {
-            text-decoration: none;
-            color: #000;
+
+        /* Main content (game list) */
+        main {
+            height: 100vh;
+            overflow-y: scroll; /* Allow scrolling in main content */
         }
     </style>
 </head>
-<body>
-    <h1>Games in Genre: <span id="genre-name">Loading...</span></h1>
-    
-    <h3>Available Games</h3>
-    <ul id="game-list">
-        <!-- Filtered game list will be populated here -->
-    </ul>
+<body class="bg-[#0A0B0F] text-white">
+    <div class="flex">
+        <!-- Sidebar --> 
+        <aside class="w-80 bg-[#151820] p-6 flex flex-col border-r-2 border-[#898989]">
+            <img src="/images/logo.png" alt="" class="pb-10">
+
+            <div id="filters" class="mb-10">
+                <h3 class="text-2xl font-semibold mb-4">Filter Games</h3>
+
+                <label for="genre-select" class="text-lg">Choose Genre:</label>
+                <select id="genre-select" class="block w-full p-2 mb-5 bg-gray-800 border border-[#DF29F3] rounded-md text-white">
+                    <option value=""> Select Genre </option>
+                </select>
+                <button id="filter-genre" class="w-full py-2 bg-[#DF29F3] text-white mb-16 rounded-md hover:bg-[#850093] transition">Filter by Genre</button>
+
+                <label for="year-select" class="text-lg mt-5">Choose Release Year:</label>
+                <select id="year-select" class="block w-full p-2 mb-5 bg-gray-800 border border-[#DF29F3] rounded-md text-white">
+                    <option value=""> Select Year </option>
+                </select>
+                <button id="filter-year" class="w-full py-2 bg-[#DF29F3] text-white rounded-md hover:bg-[#850093] transition">Filter by Release Year</button>
+            </div>
+
+            <!-- Sidebar buttons -->
+            <button id="library-button" onclick="window.location.href = '/library.html';" class="w-full py-3 bg-[#DF29F3] text-white rounded-md hover:bg-[#850093] transition mt-5">
+                Go to Your Library
+            </button>
+            <button id="logout-button" onclick="logout()" class="w-full mt-auto py-3 bg-[#f44336] text-white rounded-md hover:bg-[#e53935] transition">
+                Logout
+            </button>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 px-20 py-20">
+            <h1 class="text-4xl font-semibold mb-10">Games in Genre: <span id="genre-name" class="text-[#DF29F3]">Loading...</span></h1>
+
+            <h3 class="text-2xl font-semibold mb-4">Available Games</h3>
+            <ul id="game-list" class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Filtered game list will be populated here -->
+            </ul>
+        </main> 
+    </div>
 
     <script>
         // Get the selected genre from the URL
@@ -52,6 +71,54 @@
         // Display the selected genre
         document.getElementById('genre-name').innerText = selectedGenre;
 
+        const genres = ['All', 'Action', 'Adventure', 'RPG', 'Sports', 'Strategy'];
+const releaseYears = ['All', '2010', '2011', '2012', '2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024'];
+
+const genreSelect = document.getElementById('genre-select');
+const yearSelect = document.getElementById('year-select');
+
+// Tambahkan opsi genre ke select
+genres.forEach(genre => {
+    const option = document.createElement('option');
+    option.value = genre;
+    option.textContent = genre;
+    genreSelect.appendChild(option);
+});
+
+// Tambahkan opsi tahun rilis ke select
+releaseYears.forEach(year => {
+    const option = document.createElement('option');
+    option.value = year;
+    option.textContent = year;
+    yearSelect.appendChild(option);
+});
+
+// Event untuk filter berdasarkan genre
+document.getElementById('filter-genre').addEventListener('click', () => {
+    const selectedGenre = genreSelect.value;
+    if (selectedGenre === 'All') {
+        // Kembali ke halaman utama jika "All" dipilih
+        window.location.href = `/userGame.html`;
+    } else if (selectedGenre) {
+        window.location.href = `/genre.html?genre=${encodeURIComponent(selectedGenre)}`;
+    } else {
+        alert('Please select a genre.');
+    }
+});
+
+// Event untuk filter berdasarkan tahun
+document.getElementById('filter-year').addEventListener('click', () => {
+    const selectedYear = yearSelect.value;
+    if (selectedYear === 'All') {
+        // Kembali ke halaman utama jika "All" dipilih
+        window.location.href = `/userGame.html`;
+    } else if (selectedYear) {
+        window.location.href = `/releaseYear.html?year=${encodeURIComponent(selectedYear)}`;
+    } else {
+        alert('Please select a release year.');
+    }
+});
+
         // Fetch game data and filter by genre
         fetch('/api/games')
         .then(response => response.json())
@@ -60,31 +127,82 @@
             const filteredGames = games.filter(game => game.genre === selectedGenre);
 
             if (filteredGames.length === 0) {
-                gameList.innerHTML = '<li>No games available for the selected genre</li>';
+                gameList.innerHTML = '<li class="col-span-full text-center text-lg text-[#DF29F3]">No games available for the selected genre</li>';
             } else {
                 filteredGames.forEach(game => {
                     const listItem = document.createElement('li');
+                    listItem.classList.add('bg-[#151820]', 'p-4', 'rounded-lg', 'shadow-md', 'cursor-pointer');
+                    listItem.addEventListener('click', () => {
+                        window.location.href = `/gameDetail.html?id=${game.id}`;
+                    });
+
                     const gameImage = document.createElement('img');
-                    gameImage.src = game.image;
-                    gameImage.alt = game.title;
+    gameImage.src = game.image;
+    gameImage.alt = game.title;
+    gameImage.classList.add('w-full', 'h-auto', 'max-h-72', 'object-cover', 'rounded-md');
 
-                    const gameInfo = document.createElement('div');
-                    const gameLink = document.createElement('a');
-                    gameLink.href = `/gameDetail.html?id=${game.id}`;
-                    gameLink.innerHTML = `<strong>${game.title}</strong> - Rp${game.price}`;
+    // Container for Title, Genre, Developer, and Price
+    const leftContainer = document.createElement('div');
+    leftContainer.classList.add('flex', 'flex-col', 'text-white', 'space-y-2');
 
-                    gameInfo.appendChild(gameLink);
-                    listItem.appendChild(gameImage);
-                    listItem.appendChild(gameInfo);
-                    gameList.appendChild(listItem);
+    const gameTitle = document.createElement('h4');
+    gameTitle.classList.add('text-xl', 'font-bold');
+    gameTitle.textContent = game.title;
+
+    const gameGenre = document.createElement('p');
+    gameGenre.classList.add('text-sm');
+
+    const genreLabel = document.createElement('span');
+    genreLabel.textContent = 'Genre: ';
+
+    const genreValue = document.createElement('span');
+    genreValue.textContent = game.genre;
+    genreValue.classList.add(
+        'bg-[#850093]',    // Background color
+        'text-white',      // Warna teks
+        'rounded-md',      // Border radius
+        'px-2',            // Padding horizontal
+        'py-1'             // Padding vertical
+    );
+
+    gameGenre.appendChild(genreLabel);
+    gameGenre.appendChild(genreValue);
+
+    const gameDeveloper = document.createElement('p');
+    gameDeveloper.classList.add('text-sm');
+    gameDeveloper.textContent = `${game.developer}`;
+
+    const gamePrice = document.createElement('p');
+    gamePrice.classList.add('text-2xl', 'font-semibold', 'text-[#DF29F3]');
+    gamePrice.textContent = `Rp.${game.price}`;
+
+    leftContainer.appendChild(gameTitle);
+    leftContainer.appendChild(gameGenre);
+    leftContainer.appendChild(gameDeveloper);
+    leftContainer.appendChild(gamePrice);
+
+    const gameDetails = document.createElement('div');
+    gameDetails.classList.add('flex', 'justify-between', 'items-center', 'w-full', 'mt-4');
+    gameDetails.appendChild(leftContainer);
+
+    listItem.appendChild(gameImage);
+    listItem.appendChild(gameDetails);
+    gameList.appendChild(listItem);
                 });
             }
         })
         .catch(error => {
             console.error('Error fetching games:', error);
             const gameList = document.getElementById('game-list');
-            gameList.innerHTML = '<li>Failed to load games</li>';
+            gameList.innerHTML = '<li class="col-span-full text-center text-lg text-red-500">Failed to load games</li>';
         });
+
+        // Logout function
+        function logout() {
+            sessionStorage.removeItem('userName');
+            sessionStorage.removeItem('userId');
+            window.location.href = '/home.html'; // Redirect to home page
+        }
     </script>
 </body>
 </html>

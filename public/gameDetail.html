@@ -3,64 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/output.css" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Game Detail</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
+        .game-title {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
         }
-        h1 {
-            color: #4CAF50;
+
+        .game-info p {
+            border-bottom: 2px solid #939393;
         }
-        #game-info {
-            margin-bottom: 20px;
+
+        .buy-button {
+            transition: background-color 0.3s ease;
         }
-        .game-detail {
-            display: flex;
-            align-items: center;
-        }
-        .game-detail img {
-            width: 150px;
-            height: 150px;
-            margin-right: 20px;
-        }
-        .game-detail-info {
-            max-width: 600px;
-        }
+
         .payment-methods {
-            margin-top: 20px;
+            display: none;
         }
     </style>
 </head>
-<body>
-    <h1>Game Detail</h1>
-    
-    <div id="game-info" class="game-detail">
-        <img id="game-image" src="" alt="Game Image">
-        <div class="game-detail-info">
-            <h3 id="game-title">Loading...</h3>
-            <p id="game-price"></p>
-            <p id="game-releaseYear"></p>
-            <p id="game-genre"></p>
-            <p id="game-developer"></p>
-            <p id="game-publisher"></p>
-            <p id="game-description"></p>
-            <button id="buy-button">Buy Now</button>
-        </div>
-    </div>
+<body class="bg-center bg-[#0A0B0F] h-screen">
 
-    <div id="payment-methods" class="payment-methods" style="display: none;">
-        <h3>Select Payment Method</h3>
-        <form id="payment-form">
-            <label for="payment-method">Payment Method:</label>
-            <select id="payment-method">
-                <option value="credit-card">Credit Card</option>
-                <option value="paypal">PayPal</option>
-                <option value="bank-transfer">Bank Transfer</option>
-            </select>
-            <br><br>
-            <button type="submit">Confirm Purchase</button>
-        </form>
+    <div class="flex justify-center items-center h-full w-full px-4">
+        <div class="bg-[#151820] text-white rounded-lg p-6 w-full max-w-3xl overflow-auto">
+            <!-- Game Image -->
+            <img id="game-image" class="w-full h-auto mx-auto mb-6 rounded-lg" src="" alt="Game Image">
+            
+            <!-- Game Title -->
+            <h3 id="game-title" class="game-title text-4xl text-[#ffffff] mb-6 text-left">Loading...</h3>
+
+            <!-- Game Info Container -->
+            <div class="game-info mb-6">
+                <p class="flex justify-between items-center text-lg mb-3">
+                    <span>Price:</span> <span id="game-price" class="text-[#DF29F3]">Loading...</span>
+                </p>
+                <p class="flex justify-between items-center text-lg mb-3">
+                    <span>Release Year:</span> <span id="game-releaseYear" class="text-[#DF29F3]">Loading...</span>
+                </p>
+                <p class="flex justify-between items-center text-lg mb-3">
+                    <span>Genre:</span> <span id="game-genre" class="text-[#DF29F3]">Loading...</span>
+                </p>
+                <p class="flex justify-between items-center text-lg mb-3">
+                    <span>Developer:</span> <span id="game-developer" class="text-[#DF29F3]">Loading...</span>
+                </p>
+                <p class="flex justify-between items-center text-lg mb-3">
+                    <span>Publisher:</span> <span id="game-publisher" class="text-[#DF29F3]">Loading...</span>
+                </p>
+            </div>
+
+            <!-- Game Description -->
+            <p id="game-description" class="text-lg mb-6 border-b-2 border-[#939393] pb-3 text-left">Loading...</p>
+
+            <!-- Payment Method Section -->
+            <div id="payment-methods" class="payment-methods mb-6">
+                <h4 class="text-lg text-left mb-3">Select Payment Method:</h4>
+                <form id="payment-form">
+                    <select id="payment-method" class="bg-black text-white border-2 border-[#DF29F3] py-2 px-4 rounded-md w-full mb-4">
+                        <option value="credit-card">Credit Card</option>
+                        <option value="paypal">PayPal</option>
+                        <option value="bank-transfer">Bank Transfer</option>
+                    </select>
+                    <button type="submit" class="bg-[#DF29F3] text-white py-3 px-8 rounded-full w-full text-2xl hover:bg-[#850093]">Confirm Purchase</button>
+                </form>
+            </div>
+
+            <!-- Buy Button -->
+            <button id="buy-button" class="buy-button bg-[#DF29F3] text-white py-3 px-8 rounded-full w-full text-2xl hover:bg-[#850093]">
+                Buy Now
+            </button>
+        </div>
     </div>
 
     <script>
@@ -73,12 +87,12 @@
             .then(response => response.json())
             .then(game => {
                 document.getElementById('game-title').innerText = game.title;
-                document.getElementById('game-price').innerText = `Price: Rp${game.price}`;
-                document.getElementById('game-releaseYear').innerText = `Release Year: ${game.releaseYear}`;
-                document.getElementById('game-genre').innerText = `Genre: ${game.genre}`;
-                document.getElementById('game-developer').innerText = `Developer: ${game.developer}`;
-                document.getElementById('game-publisher').innerText = `Publisher: ${game.publisher}`;
-                document.getElementById('game-description').innerText = `Description: ${game.description}`;
+                document.getElementById('game-price').innerText = `Rp${game.price}`;
+                document.getElementById('game-releaseYear').innerText = game.releaseYear;
+                document.getElementById('game-genre').innerText = game.genre;
+                document.getElementById('game-developer').innerText = game.developer;
+                document.getElementById('game-publisher').innerText = game.publisher;
+                document.getElementById('game-description').innerText = game.description;
                 document.getElementById('game-image').src = game.image;
             })
             .catch(error => console.error('Error fetching game details:', error));
@@ -93,40 +107,41 @@
                 window.location.href = '/loginuser.html';  // Redirect to login page if not logged in
             } else {
                 document.getElementById('payment-methods').style.display = 'block';  // Show payment options
+                document.getElementById('buy-button').style.display = 'none';  // Hide the buy button after click
             }
         });
 
         // Handle payment form submission
         document.getElementById('payment-form').addEventListener('submit', (e) => {
-    e.preventDefault();
+            e.preventDefault();
 
-    const paymentMethod = document.getElementById('payment-method').value;
-    const userId = sessionStorage.getItem('userId');
-    const gameId = new URLSearchParams(window.location.search).get('id');
+            const paymentMethod = document.getElementById('payment-method').value;
+            const userId = sessionStorage.getItem('userId');
+            const gameId = new URLSearchParams(window.location.search).get('id');
 
-    if (!userId) {
-        alert('Please log in to proceed with the purchase.');
-        window.location.href = '/loginuser.html';  // Redirect to login page
-        return;
-    }
+            if (!userId) {
+                alert('Please log in to proceed with the purchase.');
+                window.location.href = '/loginuser.html';  // Redirect to login page
+                return;
+            }
 
-    // Send the transaction data to the backend
-    fetch('/api/transactions/purchase', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, gameId, paymentMethod })
-    })
-    .then(response => response.json())
-    .then(data => {
-        alert('Purchase successful!');
-        window.location.href = '/userGame.html';  // Redirect to dashboard after success
-    })
-    .catch(error => {
-        console.error('Error processing transaction:', error);
-        alert('Failed to process the transaction. Please try again.');
-    });
-});
-
+            // Send the transaction data to the backend
+            fetch('/api/transactions/purchase', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId, gameId, paymentMethod })
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert('Purchase successful!');
+                window.location.href = '/userGame.html';  // Redirect to dashboard after success
+            })
+            .catch(error => {
+                console.error('Error processing transaction:', error);
+                alert('Failed to process the transaction. Please try again.');
+            });
+        });
     </script>
+
 </body>
 </html>

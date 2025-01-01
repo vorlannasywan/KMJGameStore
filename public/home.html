@@ -3,15 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <link href="/css/output.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Home</title>
 </head>
-<body>
-    <h1>HI</h1>
+<body class="bg-[url('/images/Background.jpg')] bg-no-repeat bg-cover max-h-screen overflow-hidden font-mont">
+    <div class="flex items-center justify-left min-h-screen ml-40">
+        <div class="flex flex-col space-y-4">
+            <!-- Button for admin login -->
+            <button onclick="window.location.href = 'loginadmin.html';" 
+                    class="bg-[#DF29F3] w-full text-white px-6 py-7 rounded-full mb-12 shadow-md hover:bg-[#850093] transition duration-300 text-2xl font-mont">
+                Admin Login
+            </button>
 
-    <!-- Button for admin login -->
-    <button onclick="window.location.href = 'loginadmin.html';">Admin Login</button>
-
-    <!-- Button for user login -->
-    <button onclick="window.location.href = 'loginuser.html';">User Login</button>
+            <!-- Button for user login -->
+            <button onclick="window.location.href = 'loginuser.html';" 
+            class="text-white px-56 py-7 rounded-full shadow-md border-4 border-[#DF29F3] hover:bg-[#DF29F3] transition duration-300 text-2xl font-mont">                User Login
+            </button>
+        </div>
+    </div>
 </body>
 </html>

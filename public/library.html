@@ -3,48 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/output.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>User Library</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 20px;
-        }
-        h1 {
-            color: #4CAF50;
-        }
-        #user-info {
-            margin-bottom: 20px;
-        }
-        #game-list {
-            list-style-type: none;
-            padding: 0;
-        }
-        #game-list li {
-            background-color: #f4f4f4;
-            padding: 10px;
-            margin: 5px 0;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-        }
-        #game-list img {
-            width: 50px;
-            height: 50px;
-            margin-right: 10px;
-            border-radius: 5px;
-        }
-        #game-list a {
-            text-decoration: none;
-            color: #000;
+        .game-card {
+            font-family: 'Montserrat', sans-serif;
+            transition: background-color 0.3s ease;
         }
     </style>
 </head>
-<body>
-    <h1>Your Game Library</h1>
-    <div id="user-info">
-        <p>Welcome, <span id="userName"></span></p>
+<body class="bg-[#0A0B0F] text-white">
+    <div class="min-h-screen flex flex-col p-8">
+        <!-- Header -->
+        <h1 class="text-4xl font-bold mb-6 text-[#DF29F3]">Your Game Library</h1>
+        <div id="user-info" class="mb-6 text-lg">
+            <p>Welcome, <span id="userName" class="font-semibold"></span></p>
+        </div>
+
+        <!-- Carousel -->
+        <div class="overflow-x-auto w-full">
+            <ul id="game-list" class="flex gap-6">
+                <!-- Dynamic game items will populate here -->
+            </ul>
+        </div>
     </div>
-    <ul id="game-list"></ul>
 
     <script>
         // Get userId from sessionStorage
@@ -54,63 +38,75 @@
         if (!userId) {
             window.location.href = 'loginuser.html'; // Redirect to login if no user is logged in
         } else {
-            document.getElementById('userName').innerText = `User ${userName}`; // Display user ID (or name if available)
+            document.getElementById('userName').innerText = `User ${userName}`; // Display user name
         }
 
         // Fetch user library data
         document.addEventListener('DOMContentLoaded', async () => {
-    const response = await fetch(`/api/transactions/lib?userId=${userId}`, {
-        method: 'GET',
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    });
+            const response = await fetch(`/api/transactions/lib?userId=${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                }
+            });
 
-    if (response.ok) {
-        const data = await response.json();
-        console.log(data); 
-        displayLibrary(data);
-    } else {
-        console.error('Failed to fetch library:', response.statusText);
-    }
-});
-
-function displayLibrary(transactions) {
-    const gameList = document.getElementById('game-list');
-    gameList.innerHTML = ''; // Clear previous content
-
-    if (transactions.length === 0) {
-        const noGamesMessage = document.createElement('li');
-        noGamesMessage.innerText = 'No games in your library!';
-        gameList.appendChild(noGamesMessage);
-    } else {
-        transactions.forEach(transaction => {
-            const game = transaction.Game; // Data game
-            const user = transaction.User; // Data user
-
-            // Pastikan game dan user ada
-            if (!game || !user) {
-                console.error('Game or user data is missing');
-                return;
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data);
+                displayLibrary(data);
+            } else {
+                console.error('Failed to fetch library:', response.statusText);
             }
-
-            const gameItem = document.createElement('li');
-            gameItem.innerHTML = `
-                <img src="${game.image}" alt="${game.title}"> <!-- Add image URL here -->
-                <div>
-                    <h3>${game.title}</h3>
-                    <p>${game.description}</p>
-                    <p>Price: Rp${game.price}</p>
-                    <p>Purchased by: ${user.name} (${user.email})</p>
-                    <p>Payment Method: ${transaction.paymentMethod}</p>
-                    <p>Purchase Date: ${new Date(transaction.purchaseDate).toLocaleString()}</p>
-                </div>
-            `;
-            gameList.appendChild(gameItem);
         });
-    }
-}
 
+        function displayLibrary(transactions) {
+            const gameList = document.getElementById('game-list');
+            gameList.innerHTML = ''; // Clear previous content
+
+            if (transactions.length === 0) {
+                const noGamesMessage = document.createElement('li');
+                noGamesMessage.innerText = 'No games in your library!';
+                noGamesMessage.classList.add('text-lg', 'text-center', 'text-[#DF29F3]');
+                gameList.appendChild(noGamesMessage);
+            } else {
+                transactions.forEach(transaction => {
+                    const game = transaction.Game; // Data game
+                    const user = transaction.User; // Data user
+
+                    if (!game || !user) {
+                        console.error('Game or user data is missing');
+                        return;
+                    }
+
+                    const gameItem = document.createElement('li');
+                    gameItem.classList.add(
+                        'w-80',
+                        'shrink-0',
+                        'bg-[#151820]',
+                        'p-4',
+                        'rounded-lg',
+                        'shadow-lg',
+                        'cursor-pointer',
+                        'hover:bg-[#2c2c2c]',
+                        'transition',
+                        'game-card'
+                    );
+                    gameItem.innerHTML = `
+                        <img src="${game.image}" alt="${game.title}" class="w-full h-auto object-cover rounded-md mb-4">
+                        <h3 class="text-2xl font-bold text-[#ffffff] mb-4">${game.title}</h3>
+                        <div class="text-lg">
+                            <p class="flex justify-between items-center mb-3">
+                                <span>Price:</span> <span class="text-[#DF29F3]">Rp${game.price}</span>
+                            </p>
+                            <p class="flex justify-between items-center mb-3">
+                                <span>Genre:</span> <span class="text-[#DF29F3]">${game.genre || 'N/A'}</span>
+                            </p>
+                        </div>
+                    `;
+                    gameList.appendChild(gameItem);
+                });
+            }
+        }
     </script>
 </body>
 </html>

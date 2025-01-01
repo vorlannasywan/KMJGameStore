@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Transactions</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #0A0B0F;
+            color: #fff;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #0A0B0F;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .user-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #151820;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .user-section h3 {
+            margin-top: 0;
+        }
+        .transaction-box {
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: #151820;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .transaction-box p {
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        .transaction-box p span {
+            font-weight: bold;
+        }
+        .user-name {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .user-email {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>All Transactions</h2>
+        <div id="transactionsContainer">
+            <!-- Data transaksi akan ditambahkan di sini -->
+        </div>
+    </div>
+
+    <script>
+        // Fungsi untuk mengambil semua transaksi dan menampilkannya
+        async function fetchTransactions() {
+            try {
+                const response = await fetch('/api/transactions/all-transactions');
+                const data = await response.json();
+
+                if (response.ok) {
+                    const container = document.getElementById('transactionsContainer');
+                    container.innerHTML = ''; // Kosongkan container sebelum menambah data baru
+
+                    // Pisahkan transaksi berdasarkan userId
+                    const groupedTransactions = groupTransactionsByUser(data);
+
+                    // Loop untuk setiap group user
+                    for (const userId in groupedTransactions) {
+                        const userTransactions = groupedTransactions[userId];
+                        const userSection = document.createElement('div');
+                        userSection.classList.add('user-section');
+
+                        // Ambil nama dan email user dari transaksi pertama (karena semua transaksi memiliki user yang sama)
+                        const user = userTransactions[0].User;
+
+                        userSection.innerHTML = `
+                            <h3 class="text-white">${user.name}</h3>
+                            <p class="text-white">${user.email}</p>
+                        `;
+
+                        // Loop untuk setiap transaksi dalam user
+                        userTransactions.forEach(transaction => {
+                            const transactionBox = document.createElement('div');
+                            transactionBox.classList.add('transaction-box');
+
+                            transactionBox.innerHTML = `
+                                <p><span>Transaction ID:</span> ${transaction.id}</p>
+                                <p><span>Game Title:</span> ${transaction.Game.title}</p>
+                                <p><span>Payment Method:</span> ${transaction.paymentMethod}</p>
+                                <p><span>Price:</span> Rp${transaction.Game.price}</p>
+                                <p><span>Purchase Date:</span> ${new Date(transaction.purchaseDate).toLocaleString()}</p>
+                            `;
+
+                            userSection.appendChild(transactionBox);
+                        });
+
+                        container.appendChild(userSection);
+                    }
+                } else {
+                    console.error('Failed to fetch transactions', data.message);
+                }
+            } catch (err) {
+                console.error('Error fetching transactions:', err);
+            }
+        }
+
+        // Fungsi untuk mengelompokkan transaksi berdasarkan userId
+        function groupTransactionsByUser(transactions) {
+            return transactions.reduce((acc, transaction) => {
+                if (!acc[transaction.userId]) {
+                    acc[transaction.userId] = [];
+                }
+                acc[transaction.userId].push(transaction);
+                return acc;
+            }, {});
+        }
+
+        // Panggil fungsi untuk memuat transaksi saat halaman dimuat
+        fetchTransactions();
+    </script>
+
+</body>
+</html>

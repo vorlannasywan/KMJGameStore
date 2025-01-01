@@ -3,23 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/output.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>User Register</title>
 </head>
-<body>
-    <h2>User Register</h2>
-    <form id="registerForm">
-        <label for="name">Name:</label>
-        <input type="text" id="name" required>
-        <br>
-        <label for="email">Email:</label>
-        <input type="email" id="email" required>
-        <br>
-        <label for="password">Password:</label>
-        <input type="password" id="password" required>
-        <br>
-        <button type="submit">Register</button>
-    </form>
+<body class="bg-[url('/images/Background.jpg')] bg-no-repeat bg-cover max-h-screen overflow-hidden font-mont">
+    <div class="flex items-center justify-left min-h-screen ml-40">
+        <div class="rounded-lg shadow-md w-full max-w-xl">
+            <h2 class="text-6xl font-semibold font-mont mb-20 text-[#979797]">LOGIN <span class="text-white text-6xl font-semibold font-mont text-left mb-20">/ SIGN UP</span> </h2>
+            <form id="registerForm" class="space-y-4">
+                <!-- Name Field -->
+                <div>
+                    <label for="name" class="block text-2xl font-semibold text-white mb-5">Name:</label>
+                    <input type="text" id="name" placeholder="Enter your name" required 
+                        class="block w-full px-3 py-7 mb-11 border-2 text-2xl text-white border-[#DF29F3] rounded-md shadow-sm focus:ring-[#DF29F3] focus:border-[#DF29F3] bg-transparent placeholder-[#5e5e5e] placeholder-font-mont placeholder-2xl">
+                </div>
 
+                <!-- Email Field -->
+                <div>
+                    <label for="email" class="block text-2xl font-semibold text-white mb-5">Email:</label>
+                    <input type="email" id="email" placeholder="Enter your email" required 
+                        class="block w-full px-3 py-7 mb-11 border-2 text-2xl text-white border-[#DF29F3] rounded-md shadow-sm focus:ring-[#DF29F3] focus:border-[#DF29F3] bg-transparent placeholder-[#5e5e5e] placeholder-font-mont placeholder-2xl">
+                </div>
+
+                <!-- Password Field -->
+                <div>
+                    <label for="password" class="block text-2xl font-semibold text-white mb-5">Password:</label>
+                    <input type="password" id="password" placeholder="Enter your password" required 
+                        class="block w-full px-3 py-7 mb-11 border-2 text-2xl text-white border-[#DF29F3] rounded-md shadow-sm focus:ring-[#DF29F3] focus:border-[#DF29F3] bg-transparent placeholder-[#5e5e5e] placeholder-font-mont placeholder-2xl">
+                </div>
+
+                <!-- Register Button -->
+                <button type="submit" 
+                        class="w-full bg-[#DF29F3] text-white py-7 px-3 rounded-full text-2xl font-mont font-bold hover:bg-[#850093] transition">
+                    Register
+                </button>
+            </form>
+            <p class="mt-10 text-center text-base text-white">
+                Already have an account? 
+                <button id="goToLogin" 
+                        class="text-[#DF29F3] hover:underline">
+                    Login here
+                </button>
+            </p>
+        </div>
+    </div>
     <script>
         document.getElementById('registerForm').addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -42,6 +71,12 @@
             } else {
                 alert(data.error || 'Registration failed');
             }
+            
+        });
+
+                // Handle redirect to register page
+                document.getElementById('goToLogin').addEventListener('click', () => {
+            window.location.href = 'loginuser.html'; // Redirect ke halaman register.html
         });
     </script>
 </body>

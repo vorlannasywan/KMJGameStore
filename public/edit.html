@@ -3,64 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/css/output.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
     <title>Edit Game</title>
-    <style>
-        form {
-            margin: 20px;
-            max-width: 600px;
-        }
-        label {
-            display: block;
-            margin-bottom: 8px;
-        }
-        input, textarea {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 10px;
-        }
-        button {
-            padding: 10px 20px;
-            cursor: pointer;
-            border: none;
-            background-color: #007bff;
-            color: white;
-            border-radius: 3px;
-        }
-    </style>
 </head>
-<body>
-    <h2>Edit Game</h2>
-    <form id="editGameForm">
-        <label for="title">Title:</label>
-        <input type="text" id="title" name="title" required>
-        <br><br>
+<body class="bg-[#0A0B0F] text-white font-mont flex items-center justify-center min-h-screen">
 
-        <label for="price">Price:</label>
-        <input type="number" id="price" name="price" step="0.01" required>
-        <br><br>
+    <div class="bg-[#151820] p-8 rounded-lg shadow-lg w-full max-w-2xl">
+        <h2 class="text-2xl font-semibold text-center mb-6">Edit Game</h2>
+        
+        <form id="editGameForm" class="space-y-6">
+            <div>
+                <label for="title" class="block text-sm font-medium text-gray-700">Title:</label>
+                <input type="text" id="title" name="title" required class="bg-[#0A0B0F] mt-1 py-3 px-3 block w-full rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
 
-        <label for="releaseYear">Release Year:</label>
-        <input type="number" id="releaseYear" name="releaseYear" required>
-        <br><br>
+            <div>
+                <label for="price" class="block text-sm font-medium text-gray-700">Price:</label>
+                <input type="number" id="price" name="price" step="0.01" required class="bg-[#0A0B0F]  mt-1 py-3 px-3 block w-full rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
 
-        <label for="description">Description:</label>
-        <textarea id="description" name="description" rows="4" cols="50" required></textarea>
-        <br><br>
+            <div>
+                <label for="releaseYear" class="block text-sm font-medium text-gray-700">Release Year:</label>
+                <input type="number" id="releaseYear" name="releaseYear" required class="bg-[#0A0B0F] mt-1 py-3 px-3 block w-full rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
 
-        <label for="genre">Genre:</label>
-        <input type="text" id="genre" name="genre" required>
-        <br><br>
+            <div>
+                <label for="description" class="block text-sm font-medium text-gray-700">Description:</label>
+                <textarea id="description" name="description" rows="4" class="bg-[#0A0B0F] mt-1 py-3 px-3 block w-full rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500" required></textarea>
+            </div>
 
-        <label for="developer">Developer:</label>
-        <input type="text" id="developer" name="developer" required>
-        <br><br>
+            <div>
+                <label for="genre" class="block text-sm font-medium text-gray-700">Genre:</label>
+                <input type="text" id="genre" name="genre" required class="bg-[#0A0B0F] mt-1 py-3 px-3 block w-full rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
 
-        <label for="publisher">Publisher:</label>
-        <input type="text" id="publisher" name="publisher" required>
-        <br><br>
+            <div>
+                <label for="developer" class="block text-sm font-medium text-gray-700">Developer:</label>
+                <input type="text" id="developer" name="developer" required class="bg-[#0A0B0F] mt-1 py-3 px-3 block w-full rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
 
-        <button type="submit">Update Game</button>
-    </form>
+            <div>
+                <label for="publisher" class="block text-sm font-medium text-gray-700">Publisher:</label>
+                <input type="text" id="publisher" name="publisher" required class="bg-[#0A0B0F] mt-1 py-3 px-3 block w-full rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            </div>
+
+            <div class="text-center">
+                <button type="submit" class="w-full py-3 px-4 bg-[#DF29F3] text-white font-semibold rounded-full hover:bg-[#850093] transition">Update Game</button>
+            </div>
+        </form>
+    </div>
 
     <script>
         // Fetch game details by ID and populate the form
@@ -120,5 +113,6 @@
         // Fetch game details on page load
         fetchGameDetails();
     </script>
+
 </body>
 </html>
